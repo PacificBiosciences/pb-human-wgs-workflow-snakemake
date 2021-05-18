@@ -25,14 +25,21 @@ rule seqtk_fastq_to_fasta:
 rule hifiasm_assemble:
     input: expand(f"samples/{sample}/fasta/{{movie}}.fasta", movie=movies)
     output:
-        a_ctg = temp(f"samples/{sample}/hifiasm/{sample}.asm.a_ctg.gfa"),
-        a_ctg_noseq = f"samples/{sample}/hifiasm/{sample}.asm.a_ctg.noseq.gfa",
+        hap1_p_ctg = temp(f"samples/{sample}/hifiasm/{sample}.asm.hap1.p_ctg.gfa"),
+        hap1_p_ctg_bed = f"samples/{sample}/hifiasm/{sample}.asm.hap1.p_ctg.lowQ.bed",
+        hap1_p_ctg_noseq = f"samples/{sample}/hifiasm/{sample}.asm.hap1.p_ctg.noseq.gfa",
+        hap2_p_ctg = temp(f"samples/{sample}/hifiasm/{sample}.asm.hap2.p_ctg.gfa"),
+        hap2_p_ctg_bed = f"samples/{sample}/hifiasm/{sample}.asm.hap2.p_ctg.lowQ.bed",
+        hap2_p_ctg_noseq = "samples/{sample}/hifiasm/{sample}.asm.hap2.p_ctg.noseq.gfa",
         p_ctg = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_ctg.gfa"),
-        p_ctg_noseq = f"samples/{sample}/hifiasm/{sample}.asm.p_ctg.noseq.gfa",
+        p_ctg_bed = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_ctg.lowQ.bed"),
+        p_ctg_noseq = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_ctg.noseq.gfa"),
         p_utg = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_utg.gfa"),
-        p_utg_noseq = f"samples/{sample}/hifiasm/{sample}.asm.p_utg.noseq.gfa",
+        p_utg_bed = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_utg.lowQ.bed"),
+        p_utg_noseq = temp(f"samples/{sample}/hifiasm/{sample}.asm.p_utg.noseq.gfa"),
         r_utg = temp(f"samples/{sample}/hifiasm/{sample}.asm.r_utg.gfa"),
-        r_utg_noseq = f"samples/{sample}/hifiasm/{sample}.asm.r_utg.noseq.gfa",
+        r_utg_bed = temp(f"samples/{sample}/hifiasm/{sample}.asm.r_utg.lowQ.bed"),
+        r_utg_noseq = temp(f"samples/{sample}/hifiasm/{sample}.asm.r_utg.noseq.gfa"),
         ec_bin = temp(f"samples/{sample}/hifiasm/{sample}.asm.ec.bin"),
         ovlp_rev_bin = temp(f"samples/{sample}/hifiasm/{sample}.asm.ovlp.reverse.bin"),
         ovlp_src_bin = temp(f"samples/{sample}/hifiasm/{sample}.asm.ovlp.source.bin")
@@ -79,7 +86,8 @@ rule asm_stats:
 rule align_hifiasm:
     input:
         target = config['ref']['fasta'],
-        query = [f"samples/{sample}/hifiasm/{sample}.asm.{infix}.fasta.gz" for infix in ["a_ctg", "p_ctg"]]
+        query = [f"samples/{sample}/hifiasm/{sample}.asm.{infix}.fasta.gz"
+                 for infix in ["hap1.p_ctg", "hap2.p_ctg"]]
     output: f"samples/{sample}/hifiasm/{sample}.asm.{ref}.bam"
     log: f"samples/{sample}/logs/align_hifiasm/{sample}.asm.{ref}.log"
     benchmark: f"samples/{sample}/benchmarks/align_hifiasm/{sample}.asm.{ref}.tsv"
@@ -108,16 +116,31 @@ rule align_hifiasm:
 
 rule htsbox:
     input:
-        bam = f"samples/{sample}/hifiasm/{sample}.asm.{ref}.bam",
-        bai = f"samples/{sample}/hifiasm/{sample}.asm.{ref}.bam.bai",
+        query = [f"samples/{sample}/hifiasm/{sample}.asm.{infix}.fasta.gz"
+                 for infix in ["hap1.p_ctg", "hap2.p_ctg"]],
         reference = config['ref']['fasta']
     output: f"samples/{sample}/hifiasm/{sample}.asm.{ref}.htsbox.vcf"
     log: f"samples/{sample}/logs/htsbox/{sample}.asm.log"
     benchmark: f"samples/{sample}/benchmarks/htsbox/{sample}.asm.tsv"
-    params: '-q20'
+    params:
+        minimap2_threads = 10,
+        minimap2_args = "-a -k19 -w10 -O5,56 -E4,1 -A2 -B5 -z400,50 -r2000 \
+                         -g5000 -L -Y --lj-min-ratio 0.5 --eqx --secondary=no",
+        readgroup = f"@RG\\tID:{sample}_hifiasm\\tSM:{sample}",
+        samtools_threads = 3,
+        htsbox_args = "-q20"
+    threads: 16
     conda: "envs/htsbox.yaml"
-    message: "Calling variants from {{input.bam}} using htsbox."
-    shell: "(htsbox pileup {params} -c -f {input.reference} {input.bam} > {output})> {log} 2>&1"
+    message: "Calling variants from {input.query} using htsbox."
+    shell:
+        """
+        (zcat {input.query} \
+            | minimap2 -t {params.minimap2_threads} {params.minimap2_args} \
+                -R '{params.readgroup}' {input.reference} - \
+            | samtools sort -@ {params.samtools_threads} \
+            | htsbox pileup {params.htsbox_args} -c -f {input.reference} - \
+            > {output}) > {log} 2>&1
+        """
 
 
 rule htsbox_bcftools_stats:

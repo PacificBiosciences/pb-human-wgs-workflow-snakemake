@@ -3,4 +3,4 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - hifiasm=0.9
+  - hifiasm=0.15
