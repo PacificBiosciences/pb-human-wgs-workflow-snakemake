@@ -2,30 +2,30 @@ __default__:
   account: 100humans
   partition: compute
   cpus: 1
-  extra: ""
+  extra: ''
   out: cluster_logs/slurm-%x-%j-%N.out
 pbsv_call:
   cpus: 8
 bgzip_vcf:
   cpus: 2
 deepvariant_make_examples_round1:
-  extra: "--constraint=avx512"
+  extra: '--constraint=avx512'
 deepvariant_call_variants_gpu_round1:
   partition: ml
   cpus: 8
-  extra: "--gpus=1"
+  extra: '--gpus=1'
 deepvariant_postprocess_variants_round1:
   cpus: 4
-  extra: "--constraint=avx512"
+  extra: '--constraint=avx512'
 deepvariant_make_examples_round2:
-  extra: "--constraint=avx512"
+  extra: '--constraint=avx512'
 deepvariant_call_variants_gpu_round2:
   partition: ml
   cpus: 8
-  extra: "--gpus=1"
+  extra: '--gpus=1'
 deepvariant_postprocess_variants_round2:
   cpus: 4
-  extra: "--constraint=avx512"
+  extra: '--constraint=avx512'
 deepvariant_bcftools_stats:
   cpus: 4
 generate_last_index:

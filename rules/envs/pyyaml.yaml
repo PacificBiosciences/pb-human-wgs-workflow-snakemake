@@ -1,4 +1,5 @@
 channels:
   - anaconda
 dependencies:
-  - pyyaml ==5.3.1
+  - pyyaml==5.3.1
+  - python=3

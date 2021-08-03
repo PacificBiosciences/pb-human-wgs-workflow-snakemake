@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - gfatools=0.4
+  - gfatools==0.4

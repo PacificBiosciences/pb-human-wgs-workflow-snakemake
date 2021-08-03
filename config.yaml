@@ -24,27 +24,27 @@ cohort_targets:
 kmer_length: 21
 
 # deepvariant
-#DEEPVARIANT_VERSION: "1.1.0"  # CPU-only, will require modifying threads for call_variants rules
-DEEPVARIANT_VERSION: "1.1.0-gpu"  # GPU
+#DEEPVARIANT_VERSION: '1.2.0'  # CPU-only, will require modifying threads for call_variants rules
+DEEPVARIANT_VERSION: '1.2.0-gpu'  # GPU
 N_SHARDS: 256
 
 # glnexus
-GLNEXUS_VERSION: "v1.2.7"
+GLNEXUS_VERSION: 'v1.2.7'
 
 # last/tandem-genotypes
-score_matrix: "resources/tandem-genotypes/score_matrix.par"
+score_matrix: 'resources/tandem-genotypes/score_matrix.par'
 
 # slivar
-slivar_js: "resources/slivar/slivar-functions.js"
+slivar_js: 'resources/slivar/slivar-functions.js'
 
 # lookups for slivar tsv annotations
-lof_lookup_url: "https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz"
-lof_lookup: "resources/slivar/lof_lookup.txt"
-clinvar_lookup_url: "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/gene_condition_source_id"
-clinvar_lookup: "resources/slivar/clinvar_gene_desc.txt"
+lof_lookup_url: 'https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz'
+lof_lookup: 'resources/slivar/lof_lookup.txt'
+clinvar_lookup_url: 'ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/gene_condition_source_id'
+clinvar_lookup: 'resources/slivar/clinvar_gene_desc.txt'
 
 # cohorts yaml
-cohort_yaml: "cohort.yaml"
+cohort_yaml: 'cohort.yaml'
 
 # lookups for gene mapping
 ensembl_to_hgnc: 'resources/hpo/ensembl.hgncSymbol.tsv'

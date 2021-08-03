@@ -4,6 +4,7 @@ rule svpack_filter_annotated:
         eee_vcf = config['ref']['eee_vcf'],
         gnomadsv_vcf = config['ref']['gnomadsv_vcf'],
         hprc_pbsv_vcf = config['ref']['hprc_pbsv_vcf'],
+        decode_vcf = config['ref']['decode_vcf'],
         gff = config['ref']['ensembl_gff']
     output: f"cohorts/{cohort}/svpack/{cohort}.{ref}.pbsv.svpack.vcf"
     log: f"cohorts/{cohort}/logs/svpack/{cohort}.{ref}.pbsv.svpack.log"
@@ -18,6 +19,7 @@ rule svpack_filter_annotated:
             python workflow/scripts/svpack/svpack match -v - {input.eee_vcf} | \
             python workflow/scripts/svpack/svpack match -v - {input.gnomadsv_vcf} | \
             python workflow/scripts/svpack/svpack match -v - {input.hprc_pbsv_vcf} | \
+            python workflow/scripts/svpack/svpack match -v - {input.decode_vcf} | \
             python workflow/scripts/svpack/svpack consequence - {input.gff} | \
             python workflow/scripts/svpack/svpack tagzygosity - > {output}) 2> {log}
         """

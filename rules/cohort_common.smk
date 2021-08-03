@@ -38,7 +38,7 @@ rule create_ped:
     input: config['cohort_yaml']
     output: f"cohorts/{cohort}/{cohort}.ped"
     log: f"cohorts/{cohort}/logs/yaml2ped/{cohort}.log"
-    conda: "envs/yaml2ped.yaml"
+    conda: "envs/pyyaml.yaml"
     message: f"Executing {{rule}}: Creating pedigree file for {cohort}."
     shell: f"(python3 workflow/scripts/yaml2ped.py {{input}} {cohort} {{output}}) > {{log}} 2>&1"
 
@@ -52,7 +52,7 @@ rule calculate_phrank:
         cohort_yaml = config['cohort_yaml']
     output: f"cohorts/{cohort}/{cohort}_phrank.tsv"
     log: f"cohorts/{cohort}/logs/calculate_phrank/{cohort}.log"
-    conda: "envs/phrank.yaml"
+    conda: "envs/pyyaml.yaml"
     message: f"Executing {{rule}}: Calculate Phrank scores for {cohort}."
     shell:
         f"""(python3 workflow/scripts/calculate_phrank.py \

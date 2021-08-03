@@ -81,3 +81,15 @@ rule tandem_genotypes_plot:
     params: top_N_plots = 100
     message: "Executing {rule}: Plotting tandem repeats from {input}."
     shell: "(tandem-genotypes-plot -n {params.top_N_plots} {input} {output}) > {log} 2>&1"
+
+
+rule tandem_repeat_coverage_dropouts:
+    input:
+        bam = f"samples/{sample}/whatshap/{sample}.{ref}.deepvariant.haplotagged.bam",
+        bed = config['ref']['tg_bed']
+    output: f"samples/{sample}/tandem-genotypes/{sample}.tandem-genotypes.dropouts.txt"
+    log: f"samples/{sample}/logs/tandem-genotypes/{sample}.dropouts.log"
+    benchmark: f"samples/{sample}/benchmarks/tandem-genotypes/{sample}.dropouts.tsv"
+    conda: "envs/tandem-genotypes.yaml"
+    message: "Executing {rule}: Identify coverage dropouts in {input.bed} regions in {input.bam}."
+    shell: "(python3 workflow/scripts/check_tandem_repeat_coverage.py {input.bed} {input.bam} > {output}) > {log} 2>&1"

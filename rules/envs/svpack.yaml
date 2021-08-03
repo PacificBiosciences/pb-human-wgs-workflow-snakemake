@@ -4,3 +4,4 @@ channels:
   - defaults
 dependencies:
   - pysam==0.16.0.1
+  - python=3

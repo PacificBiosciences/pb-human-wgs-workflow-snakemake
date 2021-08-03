@@ -29,7 +29,7 @@ snakemake --reason \
     --local-cores 4 \
     --jobs 500 \
     --max-jobs-per-second 1 \
-    --use-conda \
+    --use-conda --conda-frontend conda \
     --use-singularity --singularity-args '--nv ' \
     --latency-wait 120 \
     --cluster-config workflow/process_sample.cluster.sge.yaml \

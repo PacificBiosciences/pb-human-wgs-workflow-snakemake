@@ -2,6 +2,7 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - slivar==0.1.12
+  - slivar==0.2.2
   - bcftools==1.10
   - vcfpy==0.13.3
+  - python=3

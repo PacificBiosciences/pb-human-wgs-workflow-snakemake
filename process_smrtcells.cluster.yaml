@@ -2,7 +2,7 @@ __default__:
   account: 100humans
   partition: compute
   cpus: 1
-  extra: ""
+  extra: ''
   out: cluster_logs/slurm-%x-%j-%N.out
 pbmm2_align_ubam:
   cpus: 24

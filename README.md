@@ -49,6 +49,13 @@ This repo consists of three [Snakemake](https://snakemake.readthedocs.io/en/stab
   - detect possible compound heterozygotes, and filter to remove cis-combinations
   - assign a phenotype rank (Phrank) score, based on [Jagadeesh KA, *et al.* 2019. *Genet Med*.](https://doi.org/10.1038/s41436-018-0072-y)
 
+## Data Resources
+Data resources are available via [`azcopy sync`](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) at https://pbhumanwgsworkflow.blob.core.windows.net/resources:
+
+```
+azcopy sync https://pbhumanwgsworkflow.blob.core.windows.net/resources .
+```
+
 ## Dependencies
 
 - some tools (e.g. pbsv) require linux
