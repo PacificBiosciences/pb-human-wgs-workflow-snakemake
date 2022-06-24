@@ -8,4 +8,4 @@ conda-frontend: mamba
 latency-wait: 120
 use-singularity: true
 default-resources: 
-  - tmpdir=system_tmpdir
+  - tmpdir='$TMPDIR'

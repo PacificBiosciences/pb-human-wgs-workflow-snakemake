@@ -3,6 +3,7 @@ rerun-incomplete: true
 keep-going: true
 printshellcmds: true
 local-cores: 4
+max-threads: 256
 jobs: 500
 max-jobs-per-second: 1
 use-conda: true
@@ -18,7 +19,7 @@ cluster: sbatch --account={resources.account}
 default-resources:
   - account='$ACCOUNT'
   - partition='$PARTITION'
-  - tmpdir=system_tmpdir
+  - tmpdir='$TMPDIR'
   - threads=1
   - mem_mb=8000*threads
   - out='cluster_logs/slurm-%x-%j-%N.out'
